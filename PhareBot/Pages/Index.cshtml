@@ -1,0 +1,80 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<html>
+
+<head>
+	<title>Snickers Von Glitterbot</title>
+
+	<style>
+		#chainImage {
+			/* 577px wide */
+			background-image: url('/images/Chain.png');
+			width: 500px;
+			height: 50px;
+		}
+	</style>
+
+</head>
+
+
+<body>
+
+	<button id="testBoop">Boop!</button>
+
+    <div id="chainImage"></div>
+		<div id="charmContainer" style="position: relative;"></div>
+
+	<script src="~/lib/signalr/signalr.js"></script>
+	<script type="text/javascript">
+
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/glitter")
+			.build();
+
+		 connection.on("Boop", Boop);
+		//connection.on("SubBoop", SubBoop);
+
+		 connection.start();
+
+		var chainImage = document.getElementById("chainImage");
+		var nextSubCharmPosition = 0;
+
+		function Boop(theBits) {
+			console.log(`Booped for ${theBits} bits`);
+			var img = new Image(27, 27);
+			img.src = "/images/DragonFly.png";
+			img.style.marginLeft = nextSubCharmPosition;
+			img.style.position = "absolute";
+			document.getElementById("charmContainer").appendChild(img);
+
+			nextSubCharmPosition += 50;
+			
+		}
+
+		function SubBoop() {
+
+			var img = new Image(27, 27);
+			img.src = "/images/DragonFly.png";
+			img.style.marginLeft = nextSubCharmPosition;
+			img.style.position = "absolute";
+			document.getElementById("charmContainer").appendChild(img);
+
+			nextSubCharmPosition += 50;
+
+		}
+
+		document.getElementById("testBoop").addEventListener("click", function (event) {
+
+			SubBoop();
+			//Boop(100);
+
+		});
+
+	</script>
+</body>
+
+</html>
